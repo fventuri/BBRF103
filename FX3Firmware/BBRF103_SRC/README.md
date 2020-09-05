@@ -22,7 +22,7 @@ cd -
 ```
 mkdir /opt/arm
 tar xjf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C /opt/arm
-ln -s gcc-arm-none-eabi-9-2020-q2-update gcc-arm-none-eabi
+ln -s gcc-arm-none-eabi-9-2020-q2-update /opt/arm/gcc-arm-none-eabi
 ```
 - add the directory for the GCC ARM toolchain to your PATH; also we'll need a couple more environment variables (you may want to add these lines to your '.profile' or '.bash_profile' if you plan to work on building firmware in the future):
 ```
@@ -30,7 +30,7 @@ PATH=$PATH:/opt/arm/gcc-arm-none-eabi/bin
 export ARMGCC_INSTALL_PATH=/opt/arm/gcc-arm-none-eabi
 export ARMGCC_VERSION=9.3.1
 ```
-(don't forget tu run ```. ~/.profile``` or ```. ~/.bash_profile``` if you just added them to your profile)
+(don't forget to run ```. ~/.profile``` or ```. ~/.bash_profile``` if you just added them to your profile)
 - build the firmware
   - you may need to edit ```makefile```, and change the location of ```FX3FWROOT``` at the beginning if you installed the EZ-USB FX3 SDK in a different location
   - also in the ```makefile```, commenting the variable ```CYCONFOPT``` (or changing it to ```fx3_debug```) will produce a debug firmware
