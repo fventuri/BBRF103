@@ -795,7 +795,7 @@ CyFxApplicationDefine (
 
 	/* Create the thread for the application */
 	retThrdCreate = CyU3PThreadCreate (&SDR_AppThread,      /* App thread structure */
-			"21:Bulk_src_sink",                      /* Thread ID and thread name */
+			"21:Bulk_src_sink",                     /* Thread ID and thread name */
 			SDR_AppThread_Entry,              /* App thread entry function */
 			0,                                       /* No input parameter to thread */
 			ptr,                                     /* Pointer to the allocated thread stack */

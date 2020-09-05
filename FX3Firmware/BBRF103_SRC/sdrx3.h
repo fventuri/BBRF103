@@ -2,7 +2,7 @@
  ## Cypress USB 3.0 Platform header file (cyfxbulksrcsink.h)
  ## ===========================
  ##
- ##  Copyright Cypress Semiconductor Corporation, 2010-2011,
+ ##  Copyright Cypress Semiconductor Corporation, 2010-2018,
  ##  All Rights Reserved
  ##  UNPUBLISHED, LICENSED SOFTWARE.
  ##
@@ -29,12 +29,6 @@
 #include "cyu3usbconst.h"
 #include "cyu3externcstart.h"
 
-#define CY_FX_BULKSRCSINK_DMA_BUF_COUNT      (6)                       /* Bulk channel buffer count */
-#define CY_FX_BULKSRCSINK_DMA_TX_SIZE        (0)                       /* DMA transfer size is set to infinite */
-#define CY_FX_BULKSRCSINK_THREAD_STACK       (0x1000)                  /* Bulk loop application thread stack size */
-#define CY_FX_BULKSRCSINK_THREAD_PRIORITY    (8)                       /* Bulk loop application thread priority */
-
-
 /* Endpoint and socket definitions for the bulk source sink application */
 
 /* To change the producer and consumer EP enter the appropriate EP numbers for the #defines.
@@ -52,15 +46,22 @@
 #define CY_FX_EP_PRODUCER_SOCKET        CY_U3P_UIB_SOCKET_PROD_1    /* Socket 1 is producer */
 #define CY_FX_EP_CONSUMER_SOCKET        CY_U3P_UIB_SOCKET_CONS_1    /* Socket 1 is consumer */
 
-/* Used with FX3 Silicon. */
-#define CY_FX_PRODUCER_PPORT_SOCKET    CY_U3P_PIB_SOCKET_0    /* P-port Socket 0 is producer */
-#define CY_FX_CONSUMER_PPORT_SOCKET    CY_U3P_PIB_SOCKET_3    /* P-port Socket 3 is consumer */
+#define CY_FX_BULKSRCSINK_DMA_TX_SIZE        (0)        /* DMA transfer size is set to infinite */
+#define CY_FX_BULKSRCSINK_THREAD_STACK       (0x1000)   /* Bulk loop application thread stack size */
+#define CY_FX_BULKSRCSINK_THREAD_PRIORITY    (8)        /* Bulk loop application thread priority */
 
 /* Burst mode definitions: Only for super speed operation. The maximum burst mode 
  * supported is limited by the USB hosts available. The maximum value for this is 16
  * and the minimum (no-burst) is 1. */
 
-#define CY_FX_EP_BURST_LENGTH          (8)     /* Super speed burst length in packets. */
+/* Burst length in 1 KB packets. Only applicable to USB 3.0. */
+#define CY_FX_EP_BURST_LENGTH                   (8)
+
+/* Multiplication factor used when allocating DMA buffers to reduce DMA callback frequency. */
+#define CY_FX_DMA_SIZE_MULTIPLIER               (2)
+
+/* Number of DMA buffers to be used. More buffers can give better throughput. */
+#define CY_FX_BULKSRCSINK_DMA_BUF_COUNT         (3)
 
 #define CY_FX_VND_REQ1                (uint8_t)(0x05)	/* Vendor request */
 
@@ -133,9 +134,10 @@ extern const uint8_t CyFxUSBSSConfigDscr[];
 extern const uint8_t CyFxUSBStringLangIDDscr[];
 extern const uint8_t CyFxUSBManufactureDscr[];
 extern const uint8_t CyFxUSBProductDscr[];
+extern const uint8_t CyFxUsbOSDscr[];
 
 #include <cyu3externcend.h>
 
-#endif /* _INCLUDED_CYFXBULKSRCSINK_H_ */
+#endif /* _INCLUDED_SDRx3_H_ */
 
 /*[]*/

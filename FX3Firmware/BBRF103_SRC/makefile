@@ -1,4 +1,4 @@
-## Copyright Cypress Semiconductor Corporation, 2010-2011,
+## Copyright Cypress Semiconductor Corporation, 2010-2018,
 ## All Rights Reserved
 ## UNPUBLISHED, LICENSED SOFTWARE.
 ##
@@ -14,18 +14,25 @@
 ## installation root directory path.
 ##
 
-FX3FWROOT=../..
-FX3PFWROOT=../../u3p_firmware
+FX3FWROOT=/opt/cypress/cyfx3sdk
+CYCONFOPT=fx3_release
 
 all:compile
 
-include $(FX3FWROOT)/common/fx3_build_config.mak
-CCFLAGS += $(CYCFLAGS)
+include $(FX3FWROOT)/fw_build/fx3_fw/fx3_build_config.mak
 
-MODULE = cyfxgpiftousb
+MODULE = sdrx3
 
-SOURCE += $(MODULE).c
-SOURCE += cyfxbulkdscr.c
+SOURCE= $(MODULE).c 	\
+	cyfxbulkdscr.c	\
+	cyfxtx.c	\
+	i2cmodule.c
+
+ifeq ($(CYFXBUILD),arm)
+SOURCE_ASM=cyfx_startup.S
+else
+SOURCE_ASM=cyfx_gcc_startup.S
+endif
 
 C_OBJECT=$(SOURCE:%.c=./%.o)
 A_OBJECT=$(SOURCE_ASM:%.S=./%.o)
@@ -35,7 +42,16 @@ EXES = $(MODULE).$(EXEEXT)
 $(MODULE).$(EXEEXT): $(A_OBJECT) $(C_OBJECT)
 	$(LINK)
 
-$(C_OBJECT) : %.o : %.c cyfxgpiftousb.h
+cyfxtx.c:
+	cp $(FX3FWROOT)/fw_build/fx3_fw/cyfxtx.c .
+
+cyfx_startup.S:
+	cp $(FX3FWROOT)/fw_build/fx3_fw/cyfx_startup.S .
+
+cyfx_gcc_startup.S:
+	cp $(FX3FWROOT)/fw_build/fx3_fw/cyfx_gcc_startup.S .
+
+$(C_OBJECT) : %.o : %.c
 	$(COMPILE)
 
 $(A_OBJECT) : %.o : %.S
@@ -45,6 +61,8 @@ clean:
 	rm -f ./$(MODULE).$(EXEEXT)
 	rm -f ./$(MODULE).map
 	rm -f ./*.o
+	rm -f cyfxtx.c cyfx_startup.S cyfx_gcc_startup.S
+
 
 compile: $(C_OBJECT) $(A_OBJECT) $(EXES)
 
